@@ -1,26 +1,36 @@
 package com.kele.retrofit_example.network
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.kele.retrofit_example.model.WeatherResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.awaitResponse
 
 class WeatherRepository(private val api: OpenWeatherApi) : BaseRepository() {
 
-    fun getWeather(lat: String, lon:String, appid:String): WeatherResponse? {
-        var weatherResponse = WeatherResponse()
-        api.getWeatherInfo(lat, lon, appid).enqueue(object : Callback<WeatherResponse> {
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>
-            ) {
-                if (response.code() == 200) {
-                    weatherResponse = response.body()!!
+    companion object {
+        private const val HTTP_STATUS_OK = 200
+        private const val HTTP_STATUS_CREATED = 201
+    }
+
+    fun getWeather(lat: String, lon:String, appid:String): LiveData<ApiResponse<WeatherResponse>> {
+        val result = MutableLiveData<ApiResponse<WeatherResponse>>()
+        GlobalScope.launch {
+            try {
+                val apiResponse = api.getWeatherInfo(lat, lon, appid).awaitResponse()
+                when (apiResponse.code()) {
+                    HTTP_STATUS_OK, HTTP_STATUS_CREATED -> {
+                        result.postValue(ApiResponse.success(apiResponse.body()))
+                    }
+                    else -> {
+                        result.postValue(ApiResponse.error(0))
+                    }
                 }
+            } catch (e: Exception) {
+                result.postValue(ApiResponse.error(0, e.message))
             }
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-            }
-        })
-        return weatherResponse
+        }
+        return result
     }
 }
