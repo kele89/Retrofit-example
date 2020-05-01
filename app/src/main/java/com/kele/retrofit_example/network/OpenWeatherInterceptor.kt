@@ -1,4 +1,4 @@
-package com.kele.retrofit_example
+package com.kele.retrofit_example.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

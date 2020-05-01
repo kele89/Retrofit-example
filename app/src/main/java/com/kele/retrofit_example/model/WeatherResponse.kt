@@ -2,15 +2,16 @@ package com.kele.retrofit_example.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Αυτό είναι το DataModel το οποίο χρησιμοποιεί το SerializedName annotation.
+ * Στην ουσεία κάνει map τα στοιχεία που υπάρχουν στο JSON response σε μεταβλητές της κλάσης.
+ */
 class WeatherResponse {
-
     @SerializedName("sys")
     var sys: Sys? = null
-
     @SerializedName("main")
     var main: Main? = null
 }
-
 
 class Main {
     @SerializedName("temp")

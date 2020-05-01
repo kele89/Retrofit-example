@@ -1,6 +1,5 @@
 package com.kele.retrofit_example.network
 
-import com.kele.retrofit_example.OpenWeatherInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
