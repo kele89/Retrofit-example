@@ -2,6 +2,7 @@ package com.kele.retrofit_example.network
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.kele.retrofit_example.BuildConfig
 import com.kele.retrofit_example.model.WeatherResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,11 +15,11 @@ class WeatherRepository(private val api: OpenWeatherApi) : BaseRepository() {
         private const val HTTP_STATUS_CREATED = 201
     }
 
-    fun getWeatherByLocation(lat: String, lon:String, appid:String): LiveData<ApiResponse<WeatherResponse>> {
+    fun getWeatherByLocation(lat: String, lon:String): LiveData<ApiResponse<WeatherResponse>> {
         val result = MutableLiveData<ApiResponse<WeatherResponse>>()
         GlobalScope.launch {
             try {
-                val apiResponse = api.getWeatherInfoByLocation(lat, lon, appid).awaitResponse()
+                val apiResponse = api.getWeatherInfoByLocation(lat, lon, BuildConfig.OPEN_WEATHER_API_KEY).awaitResponse()
                 when (apiResponse.code()) {
                     HTTP_STATUS_OK, HTTP_STATUS_CREATED -> {
                         result.postValue(ApiResponse.success(apiResponse.body()))
@@ -34,11 +35,11 @@ class WeatherRepository(private val api: OpenWeatherApi) : BaseRepository() {
         return result
     }
 
-    fun getWeatherByCityName(cityName:String, appid:String): LiveData<ApiResponse<WeatherResponse>> {
+    fun getWeatherByCityName(cityName:String): LiveData<ApiResponse<WeatherResponse>> {
         val result = MutableLiveData<ApiResponse<WeatherResponse>>()
         GlobalScope.launch {
             try {
-                val apiResponse = api.getWeatherInfoByCityName(cityName, appid).awaitResponse()
+                val apiResponse = api.getWeatherInfoByCityName(cityName, BuildConfig.OPEN_WEATHER_API_KEY).awaitResponse()
                 when (apiResponse.code()) {
                     HTTP_STATUS_OK, HTTP_STATUS_CREATED -> {
                         result.postValue(ApiResponse.success(apiResponse.body()))

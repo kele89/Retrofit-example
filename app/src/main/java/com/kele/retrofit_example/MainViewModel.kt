@@ -31,18 +31,18 @@ class MainViewModel : ViewModel() {
 
 
 
-    fun fetchWeatherByLocation(lat: String, lon: String, appid: String) {
+    fun fetchWeatherByLocation(lat: String, lon: String) {
         _weatherResponse.addSource(
-            repository.getWeatherByLocation(lat, lon, appid)
+            repository.getWeatherByLocation(lat, lon)
         ) {
             _weatherResponse.value = it
         }
 
     }
 
-    fun fetchWeatherByCityName(cityName: String, appid: String) {
+    fun fetchWeatherByCityName(cityName: String) {
         _weatherResponse.addSource(
-            repository.getWeatherByCityName(cityName, appid)
+            repository.getWeatherByCityName(cityName)
         ) {
             _weatherResponse.value = it
         }
