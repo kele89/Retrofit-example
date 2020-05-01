@@ -14,11 +14,11 @@ class WeatherRepository(private val api: OpenWeatherApi) : BaseRepository() {
         private const val HTTP_STATUS_CREATED = 201
     }
 
-    fun getWeather(lat: String, lon:String, appid:String): LiveData<ApiResponse<WeatherResponse>> {
+    fun getWeatherByLocation(lat: String, lon:String, appid:String): LiveData<ApiResponse<WeatherResponse>> {
         val result = MutableLiveData<ApiResponse<WeatherResponse>>()
         GlobalScope.launch {
             try {
-                val apiResponse = api.getWeatherInfo(lat, lon, appid).awaitResponse()
+                val apiResponse = api.getWeatherInfoByLocation(lat, lon, appid).awaitResponse()
                 when (apiResponse.code()) {
                     HTTP_STATUS_OK, HTTP_STATUS_CREATED -> {
                         result.postValue(ApiResponse.success(apiResponse.body()))
@@ -33,4 +33,25 @@ class WeatherRepository(private val api: OpenWeatherApi) : BaseRepository() {
         }
         return result
     }
+
+    fun getWeatherByCityName(cityName:String, appid:String): LiveData<ApiResponse<WeatherResponse>> {
+        val result = MutableLiveData<ApiResponse<WeatherResponse>>()
+        GlobalScope.launch {
+            try {
+                val apiResponse = api.getWeatherInfoByCityName(cityName, appid).awaitResponse()
+                when (apiResponse.code()) {
+                    HTTP_STATUS_OK, HTTP_STATUS_CREATED -> {
+                        result.postValue(ApiResponse.success(apiResponse.body()))
+                    }
+                    else -> {
+                        result.postValue(ApiResponse.error(0))
+                    }
+                }
+            } catch (e: Exception) {
+                result.postValue(ApiResponse.error(0, e.message))
+            }
+        }
+        return result
+    }
+
 }

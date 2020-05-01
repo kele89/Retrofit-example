@@ -2,7 +2,6 @@ package com.kele.retrofit_example
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kele.retrofit_example.model.WeatherResponse
 import com.kele.retrofit_example.network.ApiResponse
@@ -32,9 +31,18 @@ class MainViewModel : ViewModel() {
 
 
 
-    fun fetchWeather(lat: String, lon: String, appid: String) {
+    fun fetchWeatherByLocation(lat: String, lon: String, appid: String) {
         _weatherResponse.addSource(
-            repository.getWeather(lat, lon, appid)
+            repository.getWeatherByLocation(lat, lon, appid)
+        ) {
+            _weatherResponse.value = it
+        }
+
+    }
+
+    fun fetchWeatherByCityName(cityName: String, appid: String) {
+        _weatherResponse.addSource(
+            repository.getWeatherByCityName(cityName, appid)
         ) {
             _weatherResponse.value = it
         }

@@ -2,10 +2,11 @@ package com.kele.retrofit_example
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.Observer
 import com.kele.retrofit_example.model.WeatherResponse
 import com.kele.retrofit_example.network.ApiResponse
-import com.kele.retrofit_example.network.OpenWeatherApiManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +23,19 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = MainViewModel()
 
         bt_get_weather.setOnClickListener {
-            mainViewModel.fetchWeather("35","139","131b689aedf7867515859a18e6eeecb0")
+            mainViewModel.fetchWeatherByLocation("35","139","131b689aedf7867515859a18e6eeecb0")
+        }
+
+        sp_country_list.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = parent?.getItemAtPosition(position).toString()
+                mainViewModel.fetchWeatherByCityName(selectedItem,"131b689aedf7867515859a18e6eeecb0")
+            }
+
         }
 
         mainViewModel.weatherResponse.observe(this, Observer { response ->
